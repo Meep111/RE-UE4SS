@@ -1,5 +1,10 @@
 # Unreal Engine 4/5 Scripting System
 
+NOTICE
+so this was my first time trying xmake, i had issue getting my shh to work for some reason, and issue with xmake, BUT! what i did not get that when xmake complained failed downloading packages i downloaded it manually, extracted it and put it in folder, DONT, just drag the downloaded zip file(dont extract) into reuess repo and configure xmake to search in that repo. and it all worked out. took me few days figure this out chuckles xd apparently xmake can extract zip xd
+
+
+
 Lua scripting system platform, C++ Modding API, SDK generator, blueprint mod loader, live property editor and other dumping utilities for UE4/5 games.
 
 ## Major features
