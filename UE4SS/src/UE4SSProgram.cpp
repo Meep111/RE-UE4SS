@@ -223,7 +223,9 @@ namespace RC
                          UE4SS_LIB_VERSION_HOTFIX,
                          fmt::format(STR("{}"), UE4SS_LIB_VERSION_PRERELEASE == 0 ? STR("") : fmt::format(STR(" PreRelease #{}"), UE4SS_LIB_VERSION_PRERELEASE)),
                          fmt::format(STR("{}"),
-                                     UE4SS_LIB_BETA_STARTED == 0 ? STR("") : (UE4SS_LIB_IS_BETA == 0 ? STR(" Beta #?") : fmt::format(STR(" Beta #{}"), UE4SS_LIB_VERSION_BETA))),
+                                     UE4SS_LIB_BETA_STARTED == 0
+                                             ? STR("")
+                                             : (UE4SS_LIB_IS_BETA == 0 ? STR(" Beta #?") : fmt::format(STR(" Beta #{}"), UE4SS_LIB_VERSION_BETA))),
                          ensure_str(UE4SS_LIB_BUILD_GITSHA));
 
 #ifdef __clang__
@@ -866,6 +868,11 @@ namespace RC
                 Output::send<LogLevel::Warning>(
                         STR("FAssetData not available in <4.17, ignoring 'LoadAllAssetsBeforeDumpingObjects' & 'LoadAllAssetsBeforeGeneratingCXXHeaders'."));
             }
+            else if (!bFAssetDataAvailable)
+            {
+                Output::send<LogLevel::Warning>(
+                        STR("FAssetData not available, ignoring 'LoadAllAssetsBeforeDumpingObjects' & 'LoadAllAssetsBeforeGeneratingCXXHeaders'."));
+            }
 
             install_lua_mods();
             LuaMod::on_program_start();
@@ -1045,19 +1052,19 @@ namespace RC
             if (mod_name_is_taken)
             {
                 mod->set_installable(false);
-                Output::send(STR("Mod name '{}' is already in use.\n"), mod->get_name());
+                Output::send<LogLevel::Warning>(STR("Mod name '{}' is already in use.\n"), mod->get_name());
                 continue;
             }
 
             if (mod->is_installed())
             {
-                Output::send(STR("Tried to install a mod that was already installed, Mod: '{}'\n"), mod->get_name());
+                Output::send<LogLevel::Warning>(STR("Tried to install a mod that was already installed, Mod: '{}'\n"), mod->get_name());
                 continue;
             }
 
             if (!mod->is_installable())
             {
-                Output::send(STR("Was unable to install mod '{}' for unknown reasons. Mod is not installable.\n"), mod->get_name());
+                Output::send<LogLevel::Warning>(STR("Was unable to install mod '{}' for unknown reasons. Mod is not installable.\n"), mod->get_name());
                 continue;
             }
 
@@ -1520,8 +1527,7 @@ namespace RC
         return m_input_handler.is_keydown_event_registered(key, modifier_keys);
     }
 
-    auto UE4SSProgram::find_mod_by_name_internal(StringViewType mod_name, IsInstalled is_installed, IsStarted is_started, FMBNI_ExtraPredicate extra_predicate)
-            -> Mod*
+    auto UE4SSProgram::find_mod_by_name_internal(StringViewType mod_name, IsInstalled is_installed, IsStarted is_started, FMBNI_ExtraPredicate extra_predicate) -> Mod*
     {
         auto mod_exists_with_name = std::find_if(get_program().m_mods.begin(), get_program().m_mods.end(), [&](auto& elem) -> bool {
             bool found = true;
