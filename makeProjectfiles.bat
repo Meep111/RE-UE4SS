@@ -1,0 +1,1 @@
+xmake project -k vsxmake2022 -m "Game__Shipping__Win64,Game__Debug__Win64"
