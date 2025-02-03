@@ -90,6 +90,8 @@ Added `OpenFor::ReadWrite`, to be used when calling `File::open`.
 
 This can be used when calling `FileHandle::memory_map`, unlike `OpenFor::Writing`.  ([UE4SS #507](https://github.com/UE4SS-RE/RE-UE4SS/pull/507)) 
 
+Added hook for `UGameViewportClient::Tick`. ([UE4SS #767](https://github.com/UE4SS-RE/RE-UE4SS/pull/767))
+
 ### BPModLoader 
 
 ### Experimental 
@@ -198,6 +200,9 @@ Fixed `FindFirstOf` return type annotation in `Types.lua` to signal that the ret
 
 Fixed non-const TArray outparams being skipped in UFunction property pushers. ([UE4SS #754](https://github.com/UE4SS-RE/RE-UE4SS/pull/754))
 
+Fixed `Key::NUM_ZERO` being incorrectly mapped to
+`Key::NUM_NINE`. ([UE4SS #762](https://github.com/UE4SS-RE/RE-UE4SS/pull/762))
+
 ### C++ API 
 Fixed a crash caused by a race condition enabled by C++ mods using `UE4SS_ENABLE_IMGUI` in their constructor ([UE4SS #481](https://github.com/UE4SS-RE/RE-UE4SS/pull/481)) 
 
@@ -230,6 +235,7 @@ DebugBuild =
 [Hooks]
 HookLoadMap = 1
 HookAActorTick = 1
+HookGameViewportClientTick = 1
 ```
 
 ### Removed
