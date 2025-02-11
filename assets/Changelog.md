@@ -36,6 +36,9 @@ Added custom game configurations for Abiotic Factor ([UE4SS #709](https://github
 
 Added custom game configurations for Psychonauts 2 ([UE4SS #731](https://github.com/UE4SS-RE/RE-UE4SS/pull/731)) 
 
+The GUI can now be rendered in the game thread if `RenderMode` in UE4SS-settings.ini is set to
+`GameViewportClientTick` ([UE4SS #768](https://github.com/UE4SS-RE/RE-UE4SS/pull/768)).
+
 ### Live View 
 Added search filter: `IncludeClassNames`. ([UE4SS #472](https://github.com/UE4SS-RE/RE-UE4SS/pull/472)) - Buckminsterfullerene 
 
@@ -43,16 +46,22 @@ Added search filter: `IncludeClassNames`. ([UE4SS #472](https://github.com/UE4SS
 
 ### Lua API 
 
+Added `TMap` implementation. [UE4SS #755](https://github.com/UE4SS-RE/RE-UE4SS/issues/755)
+
 Added global function `CreateInvalidObject`, which returns an invalid UObject. ([UE4SS #652](https://github.com/UE4SS-RE/RE-UE4SS/issues/652))  
 
 Added GenerateLuaTypes function. ([UE4SS #664](https://github.com/UE4SS-RE/RE-UE4SS/pull/664))  
 
-Added global Dumpers functions to Types.lua. ([UE4SS #664](https://github.com/UE4SS-RE/RE-UE4SS/pull/664))  
+Added global Dumpers functions to Types.lua. ([UE4SS #664](https://github.com/UE4SS-RE/RE-UE4SS/pull/664))
+
+Added global functions `RegisterEndPlayPreHook` and
+`RegisterEndPlayPostHook`. ([UE4SS #769](https://github.com/UE4SS-RE/RE-UE4SS/pull/769))
 
 #### Types.lua [PR #650](https://github.com/UE4SS-RE/RE-UE4SS/pull/650) 
 - Added `NAME_None` definition 
 - Added `EFindName` enum definition 
 - Added `FName` function overloads with FindType parameter 
+- Added `TMap` definitions
 
 #### UEHelpers 
 - Added function `GetPlayer` which is just a fast way to get player controlled Pawn (the majority of the time it will be the player character) [PR #650](https://github.com/UE4SS-RE/RE-UE4SS/pull/650)
@@ -92,6 +101,8 @@ This can be used when calling `FileHandle::memory_map`, unlike `OpenFor::Writing
 
 Added hook for `UGameViewportClient::Tick`. ([UE4SS #767](https://github.com/UE4SS-RE/RE-UE4SS/pull/767))
 
+Added hook for `AActor::EndPlay`. ([UE4SS #769](https://github.com/UE4SS-RE/RE-UE4SS/pull/769))
+
 ### BPModLoader 
 
 ### Experimental 
@@ -105,6 +116,9 @@ Changed the default location of the UE4SS release assets to be in `game executab
 Updated PatternSleuth submodule ([UE4SS #638](https://github.com/UE4SS-RE/RE-UE4SS/pull/638)) 
 
 The `bUseUObjectArrayCache` option in UE4SS-settings.ini is now set to false by default in the non-zDev release ([UE4SS #747](https://github.com/UE4SS-RE/RE-UE4SS/pull/747)) 
+
+The `GuiConsoleEnabled` option in UE4SS-settings.ini is now set to 0 by default in the non-zDev
+release ([UE4SS #779](https://github.com/UE4SS-RE/RE-UE4SS/pull/779))
 
 ### Live View 
 Fixed the majority of the lag ([UE4SS #512](https://github.com/UE4SS-RE/RE-UE4SS/pull/512)) 
@@ -173,12 +187,17 @@ Fixed `ModsFolderPath` in `UE4SS-settings.ini` not working ([UE4SS #609](https:/
 
 Fixed `attempt to index a nil value (global 'NewController')` error in `SplitScreenMod` ([UE4SS #729](https://github.com/UE4SS-RE/RE-UE4SS/pull/729)) 
 
+Fixed the GUI not closing properly with CTRL + O when OpenGL is enabled in
+`UE4SS-settings.ini`. ([UE4SS #780](https://github.com/UE4SS-RE/RE-UE4SS/pull/780))
+
 ### Live View 
 Fixed the "Write to file" checkbox not working for functions in the `Watches` tab ([UE4SS #419](https://github.com/UE4SS-RE/RE-UE4SS/pull/419)) 
 
 Reduced the likelihood of a crash happening on shutdown when at least one watch is enabled ([UE4SS #419](https://github.com/UE4SS-RE/RE-UE4SS/pull/419)) 
 
 Fixed constantly searching even if the search field is empty, and even if not on the tab ([UE4SS #475](https://github.com/UE4SS-RE/RE-UE4SS/pull/475)) 
+
+Fixed crash caused by using invalid iterator. ([UE4SS #771](https://github.com/UE4SS-RE/RE-UE4SS/pull/771))
 
 ### UHT Dumper 
 Fix SetupAttachment implementations randomly changing order ([UE4SS #606](https://github.com/UE4SS-RE/RE-UE4SS/pull/606)) - Buckminsterfullerene 
@@ -200,8 +219,13 @@ Fixed `FindFirstOf` return type annotation in `Types.lua` to signal that the ret
 
 Fixed non-const TArray outparams being skipped in UFunction property pushers. ([UE4SS #754](https://github.com/UE4SS-RE/RE-UE4SS/pull/754))
 
+Fixed `RegisterLoadMapPreHook` not working at all. ([UE4SS #776](https://github.com/UE4SS-RE/RE-UE4SS/pull/776))
+
 Fixed `Key::NUM_ZERO` being incorrectly mapped to
 `Key::NUM_NINE`. ([UE4SS #762](https://github.com/UE4SS-RE/RE-UE4SS/pull/762))
+
+Fixed table-in-table when used as a function param (i.e. FTransform) generating a Lua
+error. ([UE4SS #775](https://github.com/UE4SS-RE/RE-UE4SS/pull/775))
 
 ### C++ API 
 Fixed a crash caused by a race condition enabled by C++ mods using `UE4SS_ENABLE_IMGUI` in their constructor ([UE4SS #481](https://github.com/UE4SS-RE/RE-UE4SS/pull/481)) 
@@ -230,7 +254,10 @@ Fixed `LoadMod` function issue that variables would go out-of-scope in the `Exec
 [EngineVersionOverride]
 ; True if the game is built as Debug, Development, or Test.
 ; Default: false
-DebugBuild = 
+DebugBuild =
+
+[Debug]
+RenderMode = ExternalThread
 
 [Hooks]
 HookLoadMap = 1
