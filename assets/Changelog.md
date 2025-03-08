@@ -41,6 +41,9 @@ Added custom game configurations for Lies of P ([UE4SS #787](https://github.com/
 The GUI can now be rendered in the game thread if `RenderMode` in UE4SS-settings.ini is set to
 `EngineTick` or `GameViewportClientTick` ([UE4SS #768](https://github.com/UE4SS-RE/RE-UE4SS/pull/768), [UE4SS #794](https://github.com/UE4SS-RE/RE-UE4SS/pull/794)).
 
+Added override Lua files for ProcessLocalScriptFunction and
+ProcessInternal [UE4SS #823](https://github.com/UE4SS-RE/RE-UE4SS/pull/823) - M3C3I
+
 
 ### Live View 
 Added search filter: `IncludeClassNames`. ([UE4SS #472](https://github.com/UE4SS-RE/RE-UE4SS/pull/472)) - Buckminsterfullerene 
@@ -65,6 +68,11 @@ Added global functions `RegisterEndPlayPreHook` and
 - Added `EFindName` enum definition 
 - Added `FName` function overloads with FindType parameter 
 - Added `TMap` definitions
+
+#### Types.lua [PR #820](https://github.com/UE4SS-RE/RE-UE4SS/pull/820)
+
+- Added `UStruct` definition
+- Added `UClass` definition
 
 #### UEHelpers 
 - Added function `GetPlayer` which is just a fast way to get player controlled Pawn (the majority of the time it will be the player character) [PR #650](https://github.com/UE4SS-RE/RE-UE4SS/pull/650)
@@ -208,6 +216,9 @@ Fixed constantly searching even if the search field is empty, and even if not on
 
 Fixed crash caused by using invalid iterator. ([UE4SS #771](https://github.com/UE4SS-RE/RE-UE4SS/pull/771))
 
+Fixed opened object getting clipped too early ([UE4SS #814](https://github.com/UE4SS-RE/RE-UE4SS/pull/814)) -
+Corporalwill123
+
 ### UHT Dumper 
 Fix SetupAttachment implementations randomly changing order ([UE4SS #606](https://github.com/UE4SS-RE/RE-UE4SS/pull/606)) - Buckminsterfullerene 
 
@@ -241,6 +252,11 @@ function. ([UE4SS #800](https://github.com/UE4SS-RE/RE-UE4SS/pull/800))
 
 Fixed race condition when using RegisterCustomEvent or
 UnregisterCustomEvent. ([UE4SS #805](https://github.com/UE4SS-RE/RE-UE4SS/pull/805))
+  
+Fixed frequent `StrProperty can only be set to a string or FString`
+error. ([UE4SS #819](https://github.com/UE4SS-RE/RE-UE4SS/pull/819))
+
+Fixed problems that caused issues for language servers. ([UE4SS #821](https://github.com/UE4SS-RE/RE-UE4SS/pull/821)
 
 ### C++ API 
 Fixed a crash caused by a race condition enabled by C++ mods using `UE4SS_ENABLE_IMGUI` in their constructor ([UE4SS #481](https://github.com/UE4SS-RE/RE-UE4SS/pull/481)) 
